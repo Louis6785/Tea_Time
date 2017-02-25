@@ -11,6 +11,8 @@
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <!-- 最新的Bootstrap核心 JavaScript文件 -->
     <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- 引入vue.js核心 JavaScript文件 -->
+    <script src="/lib/vue/dist/vue.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -30,7 +32,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
                 <li class="active">
-                  <a href="#">首頁</a>
+                  <a href="#">{{ title }}</a>
                 </li>
                 <li>
                   <a href="#">連結1</a>
@@ -65,7 +67,7 @@
               </ul>
 
               <form class="navbar-form navbar-left" role="search">
-                <div>
+                <div class="form-group">
                   <input type="text" class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
@@ -150,6 +152,15 @@
           </p>
         </div>
       </div>
-    </div>    
+    </div>   
+
+    <script language="JavaScript">
+      var vue = new Vue({
+        el: '#bs-example-navbar-collapse-1',
+        data: {
+          title: '首頁vue.js'
+        }
+      });
+    </script> 
   </body>
 </html>
