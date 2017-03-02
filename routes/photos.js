@@ -33,6 +33,19 @@ router.get('/upload', function(req, res){
   });
 });
 
+router.get('/:id/download', function(req, res, next) {
+    var id = req.params.id;
+    Photo.findById(id, function(err, photo) {
+        if(err) return next(err);
+        var path = './public' + photo.path;
+        // 開啟圖片
+        // res.sendfile(path);
+        
+        // 觸發瀏覽器下載
+        res.download(path);
+    });
+});
+
 router.post('/upload', function(req, res, next){    
     var path = './public/photos/';
     var form = new multiparty.Form({uploadDir: path});
