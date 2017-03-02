@@ -5,23 +5,26 @@ var multiparty = require('multiparty');
 var util = require('util');
 var fs = require('fs');
 
+// var photos = [];
+// photos.push({
+//     name: 'Node.js Logo',
+//     path: 'http://nodejs.org/images/logos/nodejs-green.png'
+// });
 
-var photos = [];
-photos.push({
-    name: 'Node.js Logo',
-    path: 'http://nodejs.org/images/logos/nodejs-green.png'
-});
-
-photos.push({
-    name: 'Ryan Speaking',
-    path: 'http://nodejs.org/images/ryan-speaker.jpg'
-});
+// photos.push({
+//     name: 'Ryan Speaking',
+//     path: 'http://nodejs.org/images/ryan-speaker.jpg'
+// });
 
 router.get('/', function(req, res) {
-    res.render('photos', {
+    Photo.find({}, function(err, photos) {
+        if(err) return next(err);
+        res.render('photos', {
         title: 'Photos',
         photos: photos
     });
+    });
+    
 });
 
 router.get('/upload', function(req, res){
@@ -41,22 +44,31 @@ router.post('/upload', function(req, res, next){
         else
         {
             console.log('parse files:' + filesTmp);
-            var name = fields.name[0] || files.image[0].originalFilename;
+            var filename = files.image[0].originalFilename;
+            var name = fields.name[0] || filename;
             var oldpath = files.image[0].path;
-            var newpath = path + files.image[0].originalFilename;
+            var newpath = path + filename;
             
             fs.rename(oldpath, newpath, function(err){
                 if(err){
                     console.log('rename error: ' + err);
+                    return next(err);
                 } else {
                     console.log('rename ok');
+                    Photo.create({
+                        name: name,
+                        path: '/photos/' + filename
+                    }, function(err) {
+                        if(err) return next(err);
+                        res.redirect('/photos');
+                    });
                 }
             });
         }
 
-        res.writeHead(200, {'content-type': 'text/plain'});
-        res.write('received upload:\n\n');
-        res.end(util.inspect({fields: fields, files: files}));
+        // res.writeHead(200, {'content-type': 'text/plain'});
+        // res.write('received upload:\n\n');
+        // res.end(util.inspect({fields: fields, files: files}));
     });
 });
 
